@@ -12,8 +12,9 @@ board=$(board_name)
 
 case "$board" in
 cznic,turris-omnia)
-	ucidef_set_interface_lan "lan0 lan1 lan2 lan3 lan4"
 	ucidef_set_interface_wan "eth2"
+	ucidef_add_switch "switch0" \
+		"0:lan:0" "1:lan:1" "2:lan:2" "3:lan:3" "4:lan:4" "5@eth1" "6@eth0"
 	;;
 globalscale,espressobin)
 	ucidef_set_interfaces_lan_wan "lan0 lan1" "wan"
