@@ -49,8 +49,8 @@ Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
  include/uapi/linux/tc_act/tc_ctinfo.h |  29 ++
  net/sched/Kconfig                     |  13 +
  net/sched/Makefile                    |   1 +
- net/sched/act_ctinfo.c                | 394 ++++++++++++++++++++++++++
- 6 files changed, 472 insertions(+), 1 deletion(-)
+ net/sched/act_ctinfo.c                | 396 ++++++++++++++++++++++++++
+ 6 files changed, 474 insertions(+), 1 deletion(-)
  create mode 100644 include/net/tc_act/tc_ctinfo.h
  create mode 100644 include/uapi/linux/tc_act/tc_ctinfo.h
  create mode 100644 net/sched/act_ctinfo.c
@@ -169,7 +169,7 @@ Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
  obj-$(CONFIG_NET_IFE_SKBMARK)	+= act_meta_mark.o
 --- /dev/null
 +++ b/net/sched/act_ctinfo.c
-@@ -0,0 +1,394 @@
+@@ -0,0 +1,396 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/* net/sched/act_ctinfo.c  netfilter ctinfo connmark actions
 + *
@@ -212,6 +212,7 @@ Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
 +	/* using overlimits stats to count how many DSCP updates	       */
 +	switch (proto) {
 +	case NFPROTO_IPV4:
++		pskb_trim_rcsum(skb, ntohs(ip_hdr(skb)->tot_len));
 +		dscp = ipv4_get_dsfield(ip_hdr(skb)) & ~INET_ECN_MASK;
 +		if (dscp != newdscp) {
 +			if (likely(!skb_try_make_writable(skb, wlen))) {
@@ -225,6 +226,7 @@ Signed-off-by: Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
 +		}
 +		break;
 +	case NFPROTO_IPV6:
++		pskb_trim_rcsum(skb, sizeof(struct ipv6hdr) + ntohs(ipv6_hdr(skb)->payload_len));
 +		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) & ~INET_ECN_MASK;
 +		if (dscp != newdscp) {
 +			if (likely(!skb_try_make_writable(skb, wlen))) {
