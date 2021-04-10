@@ -1,0 +1,1 @@
+../openwrt-configs/build.sh
